@@ -66,10 +66,8 @@ app.post('/login', async (req, res) => {
         if (passOk) {
             jwt.sign({ email: userDoc.email, id: userDoc._id }, jwtSecret, {}, (err, token) => {
                 if (err) throw err;
-                res.cookie('token', token, { httpOnly: true }).json(userDoc);
+                res.cookie('token', token, { secure: false, sameSite: 'none',httpOnly: true }).json(userDoc);
             });
-            // profile empty disat asel tr secure ani samesite cut karun, login karaycha ani login zalya vr te parat paste karacha
-            //secure: false, sameSite: 'none',
         }
 
         else {
@@ -151,15 +149,6 @@ app.get('/user-places', (req, res) => {
         res.json(await Place.find({ owner: id }));
     });
 });
-
-// app.get('/api/user-places', (req,res) => {
-//     mongoose.connect(process.env.MONGO_URL);
-//     const {token} = req.cookies;
-//     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-//       const {id} = userData;
-//       res.json( await Place.find({owner:id}) );
-//     });
-//   });
 
 
 app.get('/places/:id', async (req, res) => {
